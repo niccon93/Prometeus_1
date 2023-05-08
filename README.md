@@ -82,6 +82,7 @@ WantedBy=multi-user.target
 ```
 ![img](img/1.PNG)
 
+
 ---
 
 ### Задание 2

@@ -97,6 +97,33 @@ WantedBy=multi-user.target
 #### Требования к результату
 - [ ] Прикрепите к файлу README.md скриншот systemctl status node-exporter, где будет написано: node-exporter.service — Node Exporter Netology Lesson 9.4 — [Ваши ФИО]
 
+```
+wget https://github.com/prometheus/node_exporter/releases/download/v1.5.0/node_exporter-1.5.0.linux-amd64.tar.gz
+tar xvfz node_exporter-1.5.0.linux-amd64.tar.gz
+cd node_exporter-1.5.0.linux-amd64/
+./node_exporter  #Проверяем доступность : http://158.160.44.37:9100/metrics
+sudo mkdir /etc/prometheus/node-exporter
+sudo cp ./* /etc/prometheus/node-exporter
+chown -R prometheus:prometheus /etc/prometheus/node-exporter/
+sudo nano /etc/systemd/system/node-exporter.service #Содержимое файла ниже в блоке кода
+sudo systemctl enable node-exporter
+sudo systemctl start node-exporter
+sudo systemctl status node-exporter
+```
+Содержимое node-exporter.service
+```
+[Unit]
+Description=Node Exporter Netology Lesson 9.4 - Grishenkov N.N.
+After=network.target
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/etc/prometheus/node-exporter/node_exporter
+[Install]
+WantedBy=multi-user.target 
+```
+![img](img/2.PNG)
 ---
 
 ### Задание 3

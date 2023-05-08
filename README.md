@@ -42,6 +42,46 @@
 #### Требования к результату
 - [ ] Прикрепите к файлу README.md скриншот systemctl status prometheus, где будет написано: prometheus.service — Prometheus Service Netology Lesson 9.4 — [Ваши ФИО]
 
+```
+sudo useradd --no-create-home --shell /bin/false prometheus
+wget https://github.com/prometheus/prometheus/releases/download/v2.42.0/prometheus-2.42.0.linux-386.tar.gz
+tar xvfz prometheus-2.42.0.linux-386.tar.gz
+cd prometheus-2.42.0.linux-386/
+sudo mkdir /etc/prometheus
+sudo mkdir /var/lib/prometheus
+sudo cp ./prometheus promtool /usr/local/bin/
+sudo cp -R ./console_libraries /etc/prometheus
+sudo cp -R ./consoles /etc/prometheus
+sudo cp ./prometheus.yml /etc/prometheus
+sudo chown -R prometheus:prometheus /etc/prometheus /var/lib/prometheus
+sudo chown prometheus:prometheus /usr/local/bin/prometheus
+sudo chown prometheus:prometheus /usr/local/bin/promtool
+/usr/local/bin/prometheus --config.file /etc/prometheus/prometheus.yml --storage.tsdb.path /var/lib/prometheus/ --web.console.templates=/etc/prometheus/consoles --web.console.libraries=/etc/prometheus/console_libraries
+sudo nano /etc/systemd/system/prometheus.service #Содержимое файла ниже в блоке кода
+sudo systemctl enable prometheus.service
+sudo systemctl start prometheus.service
+sudo systemctl status prometheus.service
+```
+Содержимое prometheus.service
+```
+[Unit]
+Description=Prometheus Service Netology Lesson 9.4 - Grishenkov N.N.
+After=network.target
+[Service]
+User=prometheus
+Group=prometheus
+Type=simple
+ExecStart=/usr/local/bin/prometheus \
+--config.file /etc/prometheus/prometheus.yml \
+--storage.tsdb.path /var/lib/prometheus/ \
+--web.console.templates=/etc/prometheus/consoles \
+--web.console.libraries=/etc/prometheus/console_libraries
+ExecReload=/bin/kill -HUP $MAINPID Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+```
+![img](img/1.PNG)
+
 ---
 
 ### Задание 2
